@@ -1,1 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Trámite</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
+        /* Estilos para centrar el botón y hacerlo más grande */
+        .centered-button {
+            text-align: center;
+        }
+        .large-button {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Insertar el logo de la institución con un ancho de 4 cm -->
+    <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo de la Institución" style="width: 8cm;">
+
+    <h1>Buscar Trámite</h1>
+
+    <form method="POST" action="/">
+        <label for="codigo">Ingrese el código:</label>
+        <input type="text" id="codigo" name="codigo" required>
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if mensaje_error %}
+    <p style="color: red;">{{ mensaje_error }}</p>
+    {% endif %}
+
+    <!-- Mostrar las etiquetas de columnas una sola vez si hay resultados -->
+    {% if resultados %}
+    <h2>Resultados:</h2>
+    <p><strong>Nro_Tramite:</strong> {{ resultados[0]['Nro_Tramite'] }}</p>
+    <p><strong>Clave catastral:</strong> {{ resultados[0]['Clave catastral'] }}</p>
+    <p><strong>Solicitante:</strong> {{ resultados[0]['Solicitante'] }}</p>
+    <p><strong>Coor_x:</strong> {{ resultados[0]['Coor_x'] }}</p>
+    <p><strong>Coord_y:</strong> {{ resultados[0]['Coord_y'] }}</p>
+    <table>
+        <thead>
+            <tr>
+                <!-- Generar solo las etiquetas de las columnas restantes -->
+                {% for column in resultados[0].keys() %}
+                {% if column not in ['Nro_Tramite', 'Clave catastral', 'Solicitante', 'Coor_x', 'Coord_y'] %}
+                <th>{{ column }}</th>
+                {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in resultados %}
+            <tr>
+                <!-- Generar solo las celdas de las columnas restantes -->
+                {% for column, value in row.items() %}
+                {% if column not in ['Nro_Tramite', 'Clave catastral', 'Solicitante', 'Coor_x', 'Coord_y'] %}
+                <td>{{ value }}</td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    </script>
+</body>
+</html>
